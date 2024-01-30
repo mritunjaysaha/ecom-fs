@@ -114,7 +114,7 @@ export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
         return res.status(403).json({
             error: "[ACCESS DENIED] You're not an admin",
         });
-    } else {
-        return res.json({ admin: req.profile });
     }
+
+    next();
 };
