@@ -35,7 +35,6 @@ export const getProducts = async (req: RequestWithProfile, res: Response) => {
         const parsedOffset = parseInt(offset as string);
         const parsedLimit = parseInt(limit as string);
         const sortOrder = sortBy === "ASC" ? 1 : -1;
-        console.log("[getProducts]", { parsedOffset, parsedLimit, sortBy });
 
         const skip = parsedOffset > 0 ? (parsedOffset - 1) * parsedLimit : 0;
 
@@ -44,8 +43,6 @@ export const getProducts = async (req: RequestWithProfile, res: Response) => {
             .limit(parsedLimit)
             .sort({ createdAt: sortOrder })
             .exec();
-
-        console.log("[getProducts]", { products });
 
         if (!products) {
             return res.status(400).json({

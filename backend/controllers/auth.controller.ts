@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 
 import { NextFunction, Request, Response } from "express";
 import { expressjwt } from "express-jwt";
+import { RequestWithProfile } from "../types/RequestWithProfile";
 
 export const signUp = async (req: Request, res: Response) => {
     try {
@@ -91,11 +92,10 @@ export const isSignedIn = expressjwt({
 });
 
 export const isAuthenticated = (
-    req: Request,
+    req: RequestWithProfile,
     res: Response,
     next: NextFunction
 ) => {
-    // @ts-ignore
     const { profile, auth } = req;
 
     const checker = profile && auth && profile.email === auth.email;
@@ -107,9 +107,11 @@ export const isAuthenticated = (
     next();
 };
 
-export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
-    console.log("[isAdmin]", req.profile);
-
+export const isAdmin = (
+    req: RequestWithProfile,
+    res: Response,
+    next: NextFunction
+) => {
     if (req.profile.role !== "admin") {
         return res.status(403).json({
             error: "[ACCESS DENIED] You're not an admin",
