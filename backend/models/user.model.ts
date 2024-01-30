@@ -10,6 +10,7 @@ export interface IUser extends Document {
     salt: string;
     orders: any;
     discountCode: any;
+    role: string;
 }
 
 const UserSchema: Schema = new Schema<IUser>(
@@ -35,6 +36,12 @@ const UserSchema: Schema = new Schema<IUser>(
         },
         salt: {
             type: String,
+        },
+        role: {
+            type: String,
+            enum: ["user", "admin"],
+            default: "user",
+            required: true,
         },
     },
     { timestamps: true }
