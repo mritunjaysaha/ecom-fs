@@ -11,6 +11,7 @@ export interface IUser extends Document {
     orders: any;
     discountCode: any;
     role: string;
+    orderCount: number;
 }
 
 const UserSchema: Schema = new Schema<IUser>(
@@ -43,6 +44,9 @@ const UserSchema: Schema = new Schema<IUser>(
             default: "user",
             required: true,
         },
+        discountCode: [{ type: Schema.Types.ObjectId, ref: "DiscountModel" }],
+        orders: [{ type: Schema.Types.ObjectId, ref: "OrderModel" }],
+        orderCount: { type: Number, default: 0 },
     },
     { timestamps: true }
 );
