@@ -10,6 +10,7 @@ const ProductSchema: Schema = new Schema<IProduct>({
     id: {
         type: String,
         required: true,
+        unique: true,
     },
     name: {
         type: String,
