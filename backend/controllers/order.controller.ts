@@ -90,7 +90,6 @@ export const addToCart = async (req: Request, res: Response) => {
         res.json({
             success: true,
             message: "Products added to cart successfully.",
-            order: newOrder,
         });
     } catch (error) {
         console.error(error);
