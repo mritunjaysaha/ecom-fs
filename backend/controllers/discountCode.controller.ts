@@ -34,3 +34,33 @@ export const generateDiscountCode = async (
         });
     }
 };
+
+export const getDiscountCode = async (
+    req: RequestWithProfile,
+    res: Response
+) => {
+    try {
+        const availableCodes = await DiscountModel.find({});
+
+        const { orderCount } = req.profile;
+
+        if (orderCount % 3 === 0) {
+            return res.json({
+                success: true,
+                error: "discount code generated",
+                discountCode:
+                    availableCodes[
+                        Math.floor(Math.random() * availableCodes.length)
+                    ].code,
+            });
+        } else {
+            return res.json({
+                success: true,
+                error: "Discount code cannot be generated",
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+};
