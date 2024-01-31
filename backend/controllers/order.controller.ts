@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { DiscountModel } from "../models/discount.model";
 import { OrderModel } from "../models/order.model";
 import { ProductModel } from "../models/product.model";
+import { UserModel } from "../models/user.model";
+import { RequestWithProfile } from "../types/RequestWithProfile";
 
 export const getOrderSummary = async (req: Request, res: Response) => {
     try {
@@ -59,7 +61,7 @@ export const getOrderSummary = async (req: Request, res: Response) => {
     }
 };
 
-export const addToCart = async (req: Request, res: Response) => {
+export const addToCart = async (req: RequestWithProfile, res: Response) => {
     try {
         const { productIds } = req.body;
 
@@ -85,7 +87,20 @@ export const addToCart = async (req: Request, res: Response) => {
             newOrder.products.push(productId);
         }
 
-        await newOrder.save();
+        const savedOrder = await newOrder.save();
+
+        if (!savedOrder) {
+            return res.json({
+                success: false,
+                message: "Failed to add products",
+            });
+        }
+
+        await UserModel.findOneAndUpdate(
+            { email: req.profile.email },
+            { $inc: { orderCount: 1 } },
+            { new: true }
+        );
 
         res.json({
             success: true,
