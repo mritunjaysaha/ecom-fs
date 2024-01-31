@@ -4,12 +4,14 @@ import { IProduct } from "./product.model";
 
 export interface IOrder extends Document {
     products: IProduct[];
+    totalAmount: number;
     discountCode: IDiscountCode;
     transactionCompleted: boolean;
 }
 
 const OrderSchema: Schema = new Schema<IOrder>({
     products: [{ type: Schema.Types.ObjectId, ref: "ProductModel" }],
+    totalAmount: { type: Number },
     discountCode: { type: Schema.Types.ObjectId, ref: "DiscountModel" },
     transactionCompleted: { type: Boolean, default: false },
 });

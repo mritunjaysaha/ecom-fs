@@ -11,9 +11,14 @@ export const getOrderSummary = async (req: Request, res: Response) => {
 
         const totalPurchaseAmount = await OrderModel.aggregate([
             {
+                $match: {
+                    transactionCompleted: true,
+                },
+            },
+            {
                 $group: {
                     _id: null,
-                    totalAmount: { $sum: { $size: "$items" } },
+                    totalAmount: { $sum: "$totalAmount" },
                 },
             },
         ]);
@@ -75,6 +80,8 @@ export const addToCart = async (req: RequestWithProfile, res: Response) => {
         // Create a new order
         const newOrder = new OrderModel();
 
+        let totalAmount = 0;
+
         for (const productId of productIds) {
             const product = await ProductModel.findById(productId);
 
@@ -84,8 +91,12 @@ export const addToCart = async (req: RequestWithProfile, res: Response) => {
                     .json({ error: `Product with ID ${productId} not found.` });
             }
 
+            totalAmount += product.price;
+
             newOrder.products.push(productId);
         }
+
+        newOrder.totalAmount = totalAmount;
 
         const savedOrder = await newOrder.save();
 
