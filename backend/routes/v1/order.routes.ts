@@ -4,7 +4,7 @@ import {
     isAuthenticated,
     isSignedIn,
 } from "../../controllers/auth.controller";
-import { getOrderSummary } from "../../controllers/order.controller";
+import { addToCart, getOrderSummary } from "../../controllers/order.controller";
 import { getUserById } from "../../controllers/user.controller";
 
 const router = Router();
@@ -23,5 +23,11 @@ router.get(
     isAdmin,
     getOrderSummary
 );
+
+/**
+ * @method POST
+ * @route /api/v1/order/:userId/add-to-cart
+ */
+router.post("/:userId/add-to-cart", isSignedIn, isAuthenticated, addToCart);
 
 export default router;

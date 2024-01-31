@@ -96,6 +96,7 @@ export const isAuthenticated = (
     res: Response,
     next: NextFunction
 ) => {
+    // @ts-ignore
     const { profile, auth } = req;
 
     const checker = profile && auth && profile.email === auth.email;

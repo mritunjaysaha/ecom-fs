@@ -55,6 +55,7 @@ UserSchema.virtual("password")
     .set(function (password) {
         this._password = password;
         this.salt = uuidV1();
+        // @ts-ignore
         this.encryptedPassword = this.securePassword(password);
     })
     .get(function () {

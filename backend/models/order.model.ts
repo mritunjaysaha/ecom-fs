@@ -14,7 +14,4 @@ const OrderSchema: Schema = new Schema<IOrder>({
     transactionCompleted: { type: Boolean, default: false },
 });
 
-export const OrderModel: Model<IOrder> = model<IOrder>(
-    "OrderModel",
-    OrderSchema
-);
+export const OrderModel: Model<IOrder> = model<IOrder>("orders", OrderSchema);

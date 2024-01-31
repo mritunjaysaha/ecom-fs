@@ -18,6 +18,6 @@ const DiscountSchema: Schema = new Schema<IDiscountCode>({
 });
 
 export const DiscountModel: Model<IDiscountCode> = model<IDiscountCode>(
-    "DiscountModel",
+    "discount-codes",
     DiscountSchema
 );
