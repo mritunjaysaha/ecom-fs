@@ -8,6 +8,7 @@ import cors from "cors";
 import { connectDB } from "./config/db.config";
 import authRoutesV1 from "./routes/v1/auth.routes";
 import discountCodeRoutesV1 from "./routes/v1/discount.routes";
+import orderRoutesV1 from "./routes/v1/order.routes";
 import productRoutesV1 from "./routes/v1/product.routes";
 
 // INITIALIZE APP
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use("/api/v1/auth", authRoutesV1);
 app.use("/api/v1/products", productRoutesV1);
 app.use("/api/v1/discount-code", discountCodeRoutesV1);
+app.use("/api/v1/order", orderRoutesV1);
 
 app.get("/", (req, res) => {
     res.send("server up and running");
