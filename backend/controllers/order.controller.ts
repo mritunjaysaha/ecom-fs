@@ -68,7 +68,7 @@ export const getOrderSummary = async (req: Request, res: Response) => {
 
 export const addToCart = async (req: RequestWithProfile, res: Response) => {
     try {
-        const { productIds } = req.body;
+        const { productIds, id } = req.body;
 
         // Check if productIds is an array
         if (!Array.isArray(productIds)) {
@@ -79,6 +79,7 @@ export const addToCart = async (req: RequestWithProfile, res: Response) => {
 
         // Create a new order
         const newOrder = new OrderModel();
+        newOrder.id = id;
 
         let totalAmount = 0;
 
@@ -120,5 +121,40 @@ export const addToCart = async (req: RequestWithProfile, res: Response) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+export const checkout = async (req: Request, res: Response) => {
+    try {
+        const { orderId, code } = req.body;
+
+        const discountCodeRes = await DiscountModel.findOne({ code: code });
+
+        if (discountCodeRes) {
+            await OrderModel.findOneAndUpdate(
+                { id: orderId },
+                {
+                    $set: {
+                        discountCode: discountCodeRes._id,
+                    },
+                },
+                { new: true }
+            );
+        }
+        await OrderModel.findOneAndUpdate(
+            { id: orderId },
+            {
+                $set: {
+                    transactionCompleted: true,
+                },
+            },
+            { new: true }
+        );
+
+        return res.json({ success: true, message: "transaction complete" });
+    } catch (err) {
+        return res
+            .status(500)
+            .json({ success: false, message: "Internal server error" });
     }
 };
