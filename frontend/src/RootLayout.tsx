@@ -11,9 +11,7 @@ type RootLayoutProps = {
 
 export const RootLayout: FC<RootLayoutProps> = ({ children }) => {
     const dispatch = useDispatch();
-    const { isAuthenticated, email, token } = useSelector(
-        (state) => state.user
-    );
+    const { isAuthenticated, token } = useSelector((state) => state.user);
 
     const login = async () => {
         const email = "admin@foobar.com";
