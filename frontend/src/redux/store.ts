@@ -8,6 +8,7 @@ import {
     type TypedUseSelectorHook,
 } from "react-redux";
 import { appSlice } from "./slices/appSlice";
+import { userSlice } from "./slices/userSlice";
 
 const persistConfig = {
     key: "root",
@@ -16,6 +17,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
     app: appSlice.reducer,
+    user: userSlice.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
