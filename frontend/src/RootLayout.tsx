@@ -1,4 +1,5 @@
 import { FC, ReactNode } from "react";
+import { Navbar } from "./components/Navbar";
 
 type RootLayoutProps = {
     children: ReactNode;
@@ -7,7 +8,7 @@ type RootLayoutProps = {
 export const RootLayout: FC<RootLayoutProps> = ({ children }) => {
     return (
         <section>
-            <nav>Cart </nav>
+            <Navbar />
             {children}
         </section>
     );
