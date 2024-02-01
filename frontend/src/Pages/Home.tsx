@@ -22,11 +22,11 @@ const Home = () => {
     }, []);
 
     return (
-        <>
+        <section className="p-12 flex flex-wrap gap-8">
             {products.map((product) => (
                 <ProductCards key={product.id} {...product} />
             ))}
-        </>
+        </section>
     );
 };
 
