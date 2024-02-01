@@ -1,5 +1,5 @@
 function App() {
-    return <section className="bg-red-500">ecom-fs</section>;
+    return <section className="w-screen h-screen">App</section>;
 }
 
 export default App;
