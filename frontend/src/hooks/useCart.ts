@@ -11,7 +11,7 @@ export const useCart = () => {
     const navigate = useNavigate();
     const { products, cart } = useSelector((state) => state.app);
     const { email } = useSelector((state) => state.user);
-    const { itemsId, orderId } = cart;
+    const { itemsId, orderId, totalPrice } = cart;
 
     const [discountCode, setDiscountCode] = useState<string>("");
 
@@ -42,6 +42,7 @@ export const useCart = () => {
     return {
         itemsId,
         products,
+        totalPrice,
         discountCode,
         handleCheckout,
         generateDiscountCode,
