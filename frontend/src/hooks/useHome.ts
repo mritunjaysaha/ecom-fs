@@ -5,6 +5,7 @@ import {
     addOrderId,
     addProductsToState,
     addToCart,
+    removeFromCart,
 } from "../redux/slices/appSlice";
 import { useDispatch, useSelector } from "../redux/store";
 
@@ -31,6 +32,9 @@ export const useHome = () => {
         const addToCartBtn = target.closest(
             "button[data-add-cart]"
         ) as HTMLElement;
+        const removeFromCartBtn = target.closest(
+            "button[data-remove-from-cart]"
+        );
         const productDiv = target.closest(
             "div[data-product-id]"
         ) as HTMLElement;
@@ -41,6 +45,8 @@ export const useHome = () => {
 
         if (addToCartBtn && productId) {
             dispatch(addToCart(productId));
+        } else if (removeFromCartBtn && productId) {
+            dispatch(removeFromCart(productId));
         }
 
         const { data } = await axiosInstance.post(
