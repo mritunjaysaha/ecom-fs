@@ -26,7 +26,7 @@ app.use(express.json());
 app.use("/api/v1/auth", authRoutesV1);
 app.use("/api/v1/products", productRoutesV1);
 app.use("/api/v1/discount-code", discountCodeRoutesV1);
-app.use("/api/v1/order", orderRoutesV1);
+app.use("/api/v1/orders", orderRoutesV1);
 
 app.get("/", (req, res) => {
     res.send("server up and running");

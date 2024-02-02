@@ -69,6 +69,7 @@ export const getOrderSummary = async (req: Request, res: Response) => {
 export const addToCart = async (req: RequestWithProfile, res: Response) => {
     try {
         const { productIds, id } = req.body;
+        console.log("[addToCart]", { productIds, id });
 
         // Check if productIds is an array
         if (!Array.isArray(productIds)) {
@@ -77,47 +78,92 @@ export const addToCart = async (req: RequestWithProfile, res: Response) => {
             });
         }
 
-        // Create a new order
-        const newOrder = new OrderModel();
-        newOrder.id = id;
+        const existingOrder = await OrderModel.findOne({ id });
+        console.log({ existingOrder });
 
-        let totalAmount = 0;
+        // If an order with the given id exists, update it
+        if (existingOrder) {
+            const productObjIdArr: any[] = [];
+            let totalAmount = 0;
 
-        for (const productId of productIds) {
-            const product = await ProductModel.findById(productId);
+            for (const productId of productIds) {
+                const addedProducts = await ProductModel.findOne({
+                    id: productId,
+                });
 
-            if (!product) {
-                return res
-                    .status(404)
-                    .json({ error: `Product with ID ${productId} not found.` });
+                console.log({ addedProducts });
+
+                productObjIdArr.push(addedProducts._id);
+
+                totalAmount += addedProducts.price;
             }
 
-            totalAmount += product.price;
+            console.log({ productObjIdArr });
 
-            newOrder.products.push(productId);
-        }
+            existingOrder.totalAmount += totalAmount;
 
-        newOrder.totalAmount = totalAmount;
+            existingOrder.products = [
+                ...existingOrder.products,
+                ...productObjIdArr,
+            ];
+            const updatedOrder = await existingOrder.save();
 
-        const savedOrder = await newOrder.save();
+            if (!updatedOrder) {
+                return res.json({
+                    success: false,
+                    message: "Failed to update the order",
+                });
+            }
 
-        if (!savedOrder) {
-            return res.json({
-                success: false,
-                message: "Failed to add products",
+            res.json({
+                success: true,
+                message: "Order updated successfully.",
+            });
+        } else {
+            // Create a new order
+            const newOrder = new OrderModel();
+            newOrder.id = id;
+
+            let totalAmount = 0;
+            const productIdArr = [];
+
+            for (const productId of productIds) {
+                const product = await ProductModel.findOne({ id: productId });
+
+                if (!product) {
+                    return res.status(404).json({
+                        error: `Product with ID ${productId} not found.`,
+                    });
+                }
+
+                totalAmount += product.price;
+
+                productIdArr.push(product._id);
+            }
+
+            newOrder.products = productIdArr;
+            newOrder.totalAmount = totalAmount;
+
+            const savedOrder = await newOrder.save();
+
+            if (!savedOrder) {
+                return res.json({
+                    success: false,
+                    message: "Failed to add products",
+                });
+            }
+
+            await UserModel.findOneAndUpdate(
+                { email: req.profile.email },
+                { $inc: { orderCount: 1 } },
+                { new: true }
+            );
+
+            res.json({
+                success: true,
+                message: "Products added to cart successfully.",
             });
         }
-
-        await UserModel.findOneAndUpdate(
-            { email: req.profile.email },
-            { $inc: { orderCount: 1 } },
-            { new: true }
-        );
-
-        res.json({
-            success: true,
-            message: "Products added to cart successfully.",
-        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Internal Server Error" });
