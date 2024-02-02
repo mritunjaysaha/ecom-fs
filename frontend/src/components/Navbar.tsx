@@ -3,7 +3,12 @@ import { ROUTES } from "../constants/routes";
 import { useSelector } from "../redux/store";
 
 export const Navbar = () => {
-    const { total } = useSelector((state) => state.app.cart);
+    const { itemsQuantity } = useSelector((state) => state.app.cart);
+
+    const totalItems = Object.values(itemsQuantity).reduce(
+        (acc, val) => acc + val,
+        0
+    );
 
     return (
         <nav className="w-screen flex justify-between border py-4 px-12">
@@ -11,7 +16,7 @@ export const Navbar = () => {
                 Home
             </Link>
             <Link to={ROUTES.CART} className="text-xl text-black">
-                Cart {!!total && <span>{total}</span>}
+                Cart {!!totalItems && <span>{totalItems}</span>}
             </Link>
         </nav>
     );
