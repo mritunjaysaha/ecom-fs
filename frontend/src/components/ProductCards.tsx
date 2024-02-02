@@ -17,7 +17,7 @@ export const ProductCards: FC<Products> = ({ id, name, price }) => {
             {!quantity ? (
                 <button
                     data-add-cart
-                    className="border rounded-full p-2 text-white"
+                    className="border rounded-full p-2 bg-black text-white"
                 >
                     Add to cart
                 </button>
