@@ -1,25 +1,8 @@
-import { useEffect, useState } from "react";
 import { ProductCards } from "../components/ProductCards";
-import { axiosInstance } from "../config/axios";
-import { useSelector } from "../redux/store";
-import { Products } from "../types/Products";
+import { useHome } from "../hooks/useHome";
 
 const Home = () => {
-    const { email } = useSelector((state) => state.user);
-
-    const [products, setProducts] = useState<Products[]>([]);
-
-    const getProducts = async () => {
-        const { data } = await axiosInstance(
-            `/products/${email}?offset=0&limit=10&sortBy=ASC`
-        );
-
-        setProducts(data.products);
-    };
-
-    useEffect(() => {
-        getProducts();
-    }, []);
+    const { products } = useHome();
 
     return (
         <section className="p-12 flex flex-wrap gap-8">
