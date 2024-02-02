@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { Products } from "../../types/Products";
 
 type Cart = {
+    orderId: string;
     itemsId: string[];
     itemsQuantity: Record<string, number>;
     totalPrice: number;
@@ -16,7 +17,7 @@ type AppSliceState = {
 const initialState: AppSliceState = {
     products: {},
     productsArr: [],
-    cart: { itemsId: [], itemsQuantity: {}, totalPrice: 0 },
+    cart: { orderId: "", itemsId: [], itemsQuantity: {}, totalPrice: 0 },
 };
 
 export const appSlice = createSlice({
@@ -70,13 +71,22 @@ export const appSlice = createSlice({
         },
         clearCart: (state) => {
             state.cart = {
+                orderId: "",
                 itemsId: [],
                 itemsQuantity: {},
                 totalPrice: 0,
             };
         },
+        addOrderId: (state, { payload }) => {
+            state.cart.orderId = payload;
+        },
     },
 });
 
-export const { addProductsToState, addToCart, removeFromCart, clearCart } =
-    appSlice.actions;
+export const {
+    addProductsToState,
+    addToCart,
+    removeFromCart,
+    clearCart,
+    addOrderId,
+} = appSlice.actions;

@@ -1,12 +1,21 @@
-import { MouseEventHandler, useEffect } from "react";
+import { MouseEventHandler, useEffect, useState } from "react";
+import { v4 } from "uuid";
 import { axiosInstance } from "../config/axios";
-import { addProductsToState, addToCart } from "../redux/slices/appSlice";
+import {
+    addOrderId,
+    addProductsToState,
+    addToCart,
+} from "../redux/slices/appSlice";
 import { useDispatch, useSelector } from "../redux/store";
 
 export const useHome = () => {
     const dispatch = useDispatch();
     const { email } = useSelector((state) => state.user);
-    const { products, productsArr } = useSelector((state) => state.app);
+    const { products, productsArr, cart } = useSelector((state) => state.app);
+
+    const { orderId } = cart;
+
+    const [newOrderId, setNewOrderId] = useState(orderId);
 
     const getProducts = async () => {
         const { data } = await axiosInstance(
@@ -16,7 +25,7 @@ export const useHome = () => {
         dispatch(addProductsToState(data.products));
     };
 
-    const handleAddToCartClick: MouseEventHandler<HTMLElement> = (e) => {
+    const handleAddToCartClick: MouseEventHandler<HTMLElement> = async (e) => {
         const target = e.target as HTMLElement;
 
         const addToCartBtn = target.closest(
@@ -33,11 +42,31 @@ export const useHome = () => {
         if (addToCartBtn && productId) {
             dispatch(addToCart(productId));
         }
+
+        const { data } = await axiosInstance.post(
+            `${import.meta.env.VITE_BASE_URL}/orders/${email}/add-to-cart`,
+            {
+                id: newOrderId,
+                productIds: [productId],
+            }
+        );
+
+        if (!data.success) {
+            console.error("failed to update order", data?.message);
+        }
     };
 
     useEffect(() => {
         getProducts();
     }, []);
+
+    useEffect(() => {
+        if (!newOrderId) {
+            const id = v4();
+            setNewOrderId(id);
+            dispatch(addOrderId(id));
+        }
+    }, [newOrderId]);
 
     return {
         products,
