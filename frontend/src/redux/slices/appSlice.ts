@@ -30,7 +30,16 @@ export const appSlice = createSlice({
                 state.productsArr.push(data.id);
             });
         },
-        addToCart: (state, { payload }) => {},
+        addToCart: (state, { payload }) => {
+            const productId = payload as string;
+
+            state.cart.items.push(productId);
+            if (state.cart.itemsQuantity[productId]) {
+                state.cart.itemsQuantity[productId] += 1;
+            } else {
+                state.cart.itemsQuantity[productId] = 1;
+            }
+        },
         removeFromCart: (state, { payload }) => {},
         clearCart: (state, { payload }) => {},
     },
