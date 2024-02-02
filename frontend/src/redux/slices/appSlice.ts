@@ -59,7 +59,13 @@ export const appSlice = createSlice({
 
             state.cart.totalPrice -= state.products[productId].price;
         },
-        clearCart: (state, { payload }) => {},
+        clearCart: (state) => {
+            state.cart = {
+                itemsId: [],
+                itemsQuantity: {},
+                totalPrice: 0,
+            };
+        },
     },
 });
 
