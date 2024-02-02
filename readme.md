@@ -1,3 +1,5 @@
+![Vercel](https://vercelbadge.vercel.app/api/mritunjaysaha/ecom-fs)
+
 # Frontend
 
 Stack: React.js, TypeScript, TailwindCSS
@@ -12,6 +14,7 @@ VITE_BASE_URL=
 ### Install packages
 
 ```bash
+cd frontend
 npm install
 ```
 
@@ -26,6 +29,12 @@ npm run dev
 Stack: Node.js, TypeScript, MongoDB, Express.js
 Demo: [https://ecom-fs-be.vercel.app/](https://ecom-fs-be.vercel.app/)
 
+### Post collection and environment variables
+
+[Backend collection](./ecom-fs.postman_collection.json)
+[Dev environment variables](./econ-fs-dev.postman_environment.json)
+[Prod environment variables](./ecom-fs-prod.postman_environment.json)
+
 ### add .env variable file
 
 ```bash
@@ -37,6 +46,7 @@ SECRET=
 ### Install packages
 
 ```bash
+cd backend
 npm i
 ```
 
