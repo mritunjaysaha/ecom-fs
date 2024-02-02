@@ -43,7 +43,7 @@ export const getDiscountCode = async (
         const availableCodes = await DiscountModel.find({});
 
         const { orderCount } = req.profile;
-
+        console.log({ orderCount });
         if (orderCount % 3 === 0) {
             return res.json({
                 success: true,

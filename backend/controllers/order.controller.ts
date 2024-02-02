@@ -4,6 +4,7 @@ import { OrderModel } from "../models/order.model";
 import { ProductModel } from "../models/product.model";
 import { UserModel } from "../models/user.model";
 import { RequestWithProfile } from "../types/RequestWithProfile";
+import console from "console";
 
 export const getOrderSummary = async (req: Request, res: Response) => {
     try {
@@ -253,29 +254,29 @@ export const checkout = async (req: Request, res: Response) => {
 
         const discountCodeRes = await DiscountModel.findOne({ code: code });
 
+        const order = await OrderModel.findOne({ id: orderId });
+
+        console.log({ order });
+
         if (discountCodeRes) {
-            await OrderModel.findOneAndUpdate(
-                { id: orderId },
-                {
-                    $set: {
-                        discountCode: discountCodeRes._id,
-                    },
-                },
-                { new: true }
-            );
+            order.discountCode = discountCodeRes._id;
+
+            const finalAmount = order.totalAmount - order.totalAmount * 0.1;
+
+            order.totalAmount = finalAmount;
         }
-        await OrderModel.findOneAndUpdate(
-            { id: orderId },
-            {
-                $set: {
-                    transactionCompleted: true,
-                },
-            },
-            { new: true }
-        );
+
+        order.transactionCompleted = true;
+
+        const updatedOrder = await order.save();
+
+        if (!updatedOrder) {
+            return res.json({ success: false, message: "failed to checkout" });
+        }
 
         return res.json({ success: true, message: "transaction complete" });
     } catch (err) {
+        console.error(err);
         return res
             .status(500)
             .json({ success: false, message: "Internal server error" });
