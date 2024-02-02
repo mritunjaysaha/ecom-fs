@@ -69,7 +69,6 @@ export const getOrderSummary = async (req: Request, res: Response) => {
 export const addToCart = async (req: RequestWithProfile, res: Response) => {
     try {
         const { productIds, id } = req.body;
-        console.log("[addToCart]", { productIds, id });
 
         // Check if productIds is an array
         if (!Array.isArray(productIds)) {
@@ -78,34 +77,40 @@ export const addToCart = async (req: RequestWithProfile, res: Response) => {
             });
         }
 
+        // Check if an order with the given id already exists
         const existingOrder = await OrderModel.findOne({ id });
-        console.log({ existingOrder });
 
         // If an order with the given id exists, update it
         if (existingOrder) {
-            const productObjIdArr: any[] = [];
-            let totalAmount = 0;
-
             for (const productId of productIds) {
-                const addedProducts = await ProductModel.findOne({
-                    id: productId,
-                });
+                const product = await ProductModel.findOne({ id: productId });
 
-                console.log({ addedProducts });
+                if (!product) {
+                    return res.status(404).json({
+                        error: `Product with ID ${productId} not found.`,
+                    });
+                }
 
-                productObjIdArr.push(addedProducts._id);
+                const existingProduct = existingOrder.products.find(
+                    (existingProduct) =>
+                        existingProduct.product.toString() ===
+                        product._id.toString()
+                );
 
-                totalAmount += addedProducts.price;
+                // If the product is already in the order, increase its quantity
+                if (existingProduct) {
+                    existingProduct.quantity += 1;
+                } else {
+                    // If the product is not in the order, add it with quantity 1
+                    existingOrder.products.push({
+                        product: product._id,
+                        quantity: 1,
+                    });
+                }
+
+                existingOrder.totalAmount += product.price;
             }
 
-            console.log({ productObjIdArr });
-
-            existingOrder.totalAmount += totalAmount;
-
-            existingOrder.products = [
-                ...existingOrder.products,
-                ...productObjIdArr,
-            ];
             const updatedOrder = await existingOrder.save();
 
             if (!updatedOrder) {
@@ -125,7 +130,6 @@ export const addToCart = async (req: RequestWithProfile, res: Response) => {
             newOrder.id = id;
 
             let totalAmount = 0;
-            const productIdArr = [];
 
             for (const productId of productIds) {
                 const product = await ProductModel.findOne({ id: productId });
@@ -138,10 +142,12 @@ export const addToCart = async (req: RequestWithProfile, res: Response) => {
 
                 totalAmount += product.price;
 
-                productIdArr.push(product._id);
+                newOrder.products.push({
+                    product: product._id,
+                    quantity: 1,
+                });
             }
 
-            newOrder.products = productIdArr;
             newOrder.totalAmount = totalAmount;
 
             const savedOrder = await newOrder.save();

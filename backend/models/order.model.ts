@@ -12,7 +12,12 @@ export interface IOrder extends Document {
 
 const OrderSchema: Schema = new Schema<IOrder>({
     id: { type: String, required: true },
-    products: [{ type: Schema.Types.ObjectId, ref: "ProductModel" }],
+    products: [
+        {
+            product: { type: Schema.Types.ObjectId, ref: "ProductModel" },
+            quantity: { type: Number, default: 0 },
+        },
+    ],
     totalAmount: { type: Number },
     discountCode: { type: Schema.Types.ObjectId, ref: "DiscountModel" },
     transactionCompleted: { type: Boolean, default: false },
