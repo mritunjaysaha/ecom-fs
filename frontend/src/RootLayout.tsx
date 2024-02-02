@@ -1,4 +1,6 @@
 import { FC, ReactNode, useEffect } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Navbar } from "./components/Navbar";
 import { axiosInstance } from "./config/axios";
 import { setAuth } from "./redux/slices/userSlice";
@@ -42,6 +44,7 @@ export const RootLayout: FC<RootLayoutProps> = ({ children }) => {
             <Navbar />
             <p>{isAuthenticated}</p>
             {children}
+            <ToastContainer />
         </section>
     );
 };

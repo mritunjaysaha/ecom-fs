@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { axiosInstance } from "../config/axios";
 import { ROUTES } from "../constants/routes";
 import { clearCart } from "../redux/slices/appSlice";
@@ -23,6 +24,8 @@ export const useCart = () => {
         if (data?.success) {
             dispatch(clearCart());
             navigate(ROUTES.HOME);
+        } else {
+            toast.error("Checkout failed. Try Again.");
         }
     };
 
@@ -31,6 +34,8 @@ export const useCart = () => {
 
         if (data?.success) {
             setDiscountCode(data.discountCode);
+        } else {
+            toast.warn("No tokens available");
         }
     };
 
