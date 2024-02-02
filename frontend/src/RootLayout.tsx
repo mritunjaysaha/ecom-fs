@@ -16,7 +16,7 @@ export const RootLayout: FC<RootLayoutProps> = ({ children }) => {
     const { isAuthenticated, token } = useSelector((state) => state.user);
 
     const login = async () => {
-        const email = "admin@foobar.com";
+        const email = "user@foobar.com";
         const { data } = await axiosInstance.post("/auth/login", {
             email,
             password: "123456",
