@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "../redux/store";
 
 export const useHome = () => {
     const dispatch = useDispatch();
-    const { email } = useSelector((state) => state.user);
+    const { email, isAuthenticated } = useSelector((state) => state.user);
     const { products, productsArr, cart } = useSelector((state) => state.app);
 
     const { orderId } = cart;
@@ -77,8 +77,10 @@ export const useHome = () => {
     };
 
     useEffect(() => {
-        getProducts();
-    }, []);
+        if (isAuthenticated) {
+            getProducts();
+        }
+    }, [isAuthenticated]);
 
     useEffect(() => {
         if (!newOrderId) {
