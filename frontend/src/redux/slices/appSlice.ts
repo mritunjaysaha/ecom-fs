@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { Products } from "../../types/Products";
 
 type Cart = {
-    items: string[];
+    itemsId: string[];
     itemsQuantity: Record<string, number>;
     totalPrice: number;
 };
@@ -16,7 +16,7 @@ type AppSliceState = {
 const initialState: AppSliceState = {
     products: {},
     productsArr: [],
-    cart: { items: [], itemsQuantity: {}, totalPrice: 0 },
+    cart: { itemsId: [], itemsQuantity: {}, totalPrice: 0 },
 };
 
 export const appSlice = createSlice({
@@ -33,14 +33,32 @@ export const appSlice = createSlice({
         addToCart: (state, { payload }) => {
             const productId = payload as string;
 
-            state.cart.items.push(productId);
+            if (!state.cart.itemsId.includes(productId)) {
+                state.cart.itemsId.push(productId);
+            }
+
             if (state.cart.itemsQuantity[productId]) {
                 state.cart.itemsQuantity[productId] += 1;
             } else {
                 state.cart.itemsQuantity[productId] = 1;
             }
+
+            state.cart.totalPrice += state.products[productId].price;
         },
-        removeFromCart: (state, { payload }) => {},
+        removeFromCart: (state, { payload }) => {
+            const productId = payload as string;
+
+            if (state.cart.itemsQuantity[productId] === 1) {
+                state.cart.itemsId = state.cart.itemsId.filter(
+                    (id) => id !== productId
+                );
+                state.cart.totalPrice -= state.products[productId].price;
+            } else {
+                state.cart.itemsQuantity[productId] -= 1;
+            }
+
+            state.cart.totalPrice -= state.products[productId].price;
+        },
         clearCart: (state, { payload }) => {},
     },
 });
