@@ -5,7 +5,7 @@ const Cart = () => {
     const {
         itemsId,
         products,
-        totalPrice,
+        totalAmount,
         discountCode,
         generateDiscountCode,
         handleCheckout,
@@ -24,7 +24,7 @@ const Cart = () => {
 
             {itemsId.length ? (
                 <>
-                    <p>Total amount: ${totalPrice}</p>
+                    <p>Total amount: ${totalAmount}</p>
                     <div>
                         {!!discountCode && <p>{discountCode}</p>}
                         {!discountCode && (

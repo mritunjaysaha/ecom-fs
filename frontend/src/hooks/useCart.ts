@@ -15,6 +15,10 @@ export const useCart = () => {
 
     const [discountCode, setDiscountCode] = useState<string>("");
 
+    const totalAmount = discountCode
+        ? totalPrice - totalPrice * 0.1
+        : totalPrice;
+
     const handleCheckout = async () => {
         const { data } = await axiosInstance.post(`/orders/${email}/checkout`, {
             orderId,
@@ -42,7 +46,7 @@ export const useCart = () => {
     return {
         itemsId,
         products,
-        totalPrice,
+        totalAmount,
         discountCode,
         handleCheckout,
         generateDiscountCode,
