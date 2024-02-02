@@ -55,7 +55,7 @@ export const getDiscountCode = async (
             });
         } else {
             return res.json({
-                success: true,
+                success: false,
                 error: "Discount code cannot be generated",
             });
         }
