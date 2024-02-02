@@ -5,7 +5,7 @@ const Home = () => {
     const { products, productsArr, handleAddToCartClick } = useHome();
 
     return (
-        <section className="p-12 ">
+        <section className="p-12">
             <div
                 onClick={handleAddToCartClick}
                 className="flex flex-wrap gap-8"
