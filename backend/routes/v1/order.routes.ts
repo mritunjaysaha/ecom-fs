@@ -8,6 +8,7 @@ import {
     addToCart,
     checkout,
     getOrderSummary,
+    removeFromCart,
 } from "../../controllers/order.controller";
 import { getUserById } from "../../controllers/user.controller";
 
@@ -33,6 +34,17 @@ router.get(
  * @route /api/v1/order/:userId/add-to-cart
  */
 router.post("/:userId/add-to-cart", isSignedIn, isAuthenticated, addToCart);
+
+/**
+ * @method POST
+ * @route /api/v1/order/:userId/remove-from-cart
+ */
+router.post(
+    "/:userId/remove-from-cart",
+    isSignedIn,
+    isAuthenticated,
+    removeFromCart
+);
 
 /**
  * @method POST

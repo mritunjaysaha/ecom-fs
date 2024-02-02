@@ -176,6 +176,77 @@ export const addToCart = async (req: RequestWithProfile, res: Response) => {
     }
 };
 
+export const removeFromCart = async (
+    req: RequestWithProfile,
+    res: Response
+) => {
+    try {
+        const { productId, id } = req.body;
+
+        // Check if productId and id are provided
+        if (!productId || !id) {
+            return res.status(400).json({
+                error: "Invalid request. Both productId and id are required.",
+            });
+        }
+
+        // Check if an order with the given id exists
+        const existingOrder = await OrderModel.findOne({ id });
+
+        // If an order with the given id exists, update it
+        if (existingOrder) {
+            const productObj = await ProductModel.findOne({ id: productId });
+
+            const productIndex = existingOrder.products.findIndex((product) => {
+                return product.product.toString() === productObj._id.toString();
+            });
+
+            console.log({ productIndex });
+            // If the product is in the order, remove it
+            if (productIndex !== -1) {
+                const removedProduct = existingOrder.products[productIndex];
+                console.log({ removedProduct });
+                existingOrder.totalAmount -= productObj.price;
+                if (removedProduct.quantity > 1) {
+                    const copyProductsArr = existingOrder.products;
+                    console.log({ copyProductsArr });
+                    copyProductsArr[productIndex].quantity -= 1;
+
+                    existingOrder.products = copyProductsArr;
+                } else {
+                    const updatedProducts = existingOrder.products.filter(
+                        (product) =>
+                            product.product.toString() !==
+                            removedProduct.product.toString()
+                    );
+
+                    console.log({ updatedProducts });
+                    existingOrder.products = updatedProducts;
+                }
+            }
+
+            const updatedOrder = await existingOrder.save();
+
+            if (!updatedOrder) {
+                return res.json({
+                    success: false,
+                    message: "Failed to update the order",
+                });
+            }
+
+            res.json({
+                success: true,
+                message: "Product removed from cart successfully.",
+            });
+        } else {
+            res.status(404).json({ error: `Order with ID ${id} not found.` });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
 export const checkout = async (req: Request, res: Response) => {
     try {
         const { orderId, code } = req.body;
