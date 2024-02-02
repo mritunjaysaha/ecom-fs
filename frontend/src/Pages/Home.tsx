@@ -2,13 +2,14 @@ import { ProductCards } from "../components/ProductCards";
 import { useHome } from "../hooks/useHome";
 
 const Home = () => {
-    const { products } = useHome();
+    const { products, productsArr } = useHome();
 
     return (
         <section className="p-12 flex flex-wrap gap-8">
-            {products.map((product) => (
-                <ProductCards key={product.id} {...product} />
-            ))}
+            {productsArr.map((productId) => {
+                const product = products[productId];
+                return product && <ProductCards key={productId} {...product} />;
+            })}
         </section>
     );
 };

@@ -24,11 +24,20 @@ export const appSlice = createSlice({
     initialState,
     reducers: {
         addProductsToState: (state, { payload }) => {
-            console.log({ payload });
-            payload.forEach((data: Products) => {
-                state.products[data.id] = data;
-                state.productsArr.push(data.id);
+            const productsArr = payload as Products[];
+            console.log({ productsArr });
+
+            const arr: string[] = [];
+            productsArr.forEach((product: Products) => {
+                console.log({ product });
+                state.products[product.id] = product;
+
+                arr.push(product.id);
             });
+
+            const set = new Set([...state.productsArr, ...arr]);
+
+            state.productsArr = Array.from(set);
         },
         addToCart: (state, { payload }) => {
             const productId = payload as string;
@@ -69,4 +78,5 @@ export const appSlice = createSlice({
     },
 });
 
-export const { addToCart, removeFromCart } = appSlice.actions;
+export const { addProductsToState, addToCart, removeFromCart, clearCart } =
+    appSlice.actions;

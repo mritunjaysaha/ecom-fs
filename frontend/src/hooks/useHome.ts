@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { axiosInstance } from "../config/axios";
-import { useSelector } from "../redux/store";
-import { Products } from "../types/Products";
+import { useDispatch, useSelector } from "../redux/store";
+import { addProductsToState } from "../redux/slices/appSlice";
 
 export const useHome = () => {
+    const dispatch = useDispatch();
     const { email } = useSelector((state) => state.user);
-
-    const [products, setProducts] = useState<Products[]>([]);
+    const { products, productsArr } = useSelector((state) => state.app);
 
     const getProducts = async () => {
         const { data } = await axiosInstance(
             `/products/${email}?offset=0&limit=10&sortBy=ASC`
         );
 
-        setProducts(data.products);
+        dispatch(addProductsToState(data.products));
     };
 
     useEffect(() => {
@@ -22,5 +22,6 @@ export const useHome = () => {
 
     return {
         products,
+        productsArr,
     };
 };
