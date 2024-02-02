@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { MouseEventHandler, useEffect } from "react";
 import { axiosInstance } from "../config/axios";
+import { addProductsToState, addToCart } from "../redux/slices/appSlice";
 import { useDispatch, useSelector } from "../redux/store";
-import { addProductsToState } from "../redux/slices/appSlice";
 
 export const useHome = () => {
     const dispatch = useDispatch();
@@ -16,6 +16,25 @@ export const useHome = () => {
         dispatch(addProductsToState(data.products));
     };
 
+    const handleAddToCartClick: MouseEventHandler<HTMLElement> = (e) => {
+        const target = e.target as HTMLElement;
+
+        const addToCartBtn = target.closest(
+            "button[data-add-cart]"
+        ) as HTMLElement;
+        const productDiv = target.closest(
+            "div[data-product-id]"
+        ) as HTMLElement;
+
+        const productId = productDiv?.dataset?.productId;
+
+        console.log({ addToCartBtn, productDiv, productId });
+
+        if (addToCartBtn && productId) {
+            dispatch(addToCart(productId));
+        }
+    };
+
     useEffect(() => {
         getProducts();
     }, []);
@@ -23,5 +42,6 @@ export const useHome = () => {
     return {
         products,
         productsArr,
+        handleAddToCartClick,
     };
 };

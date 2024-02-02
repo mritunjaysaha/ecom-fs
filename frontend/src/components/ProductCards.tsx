@@ -9,7 +9,10 @@ export const ProductCards: FC<Products> = ({ id, name, price }) => {
         >
             <h3 className="text-2xl font-bold">{name}</h3>
             <p className="text-xl">${price}</p>
-            <button data-add className="border rounded-full p-2 text-white">
+            <button
+                data-add-cart
+                className="border rounded-full p-2 text-white"
+            >
                 Add to cart
             </button>
         </div>

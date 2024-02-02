@@ -25,11 +25,9 @@ export const appSlice = createSlice({
     reducers: {
         addProductsToState: (state, { payload }) => {
             const productsArr = payload as Products[];
-            console.log({ productsArr });
 
             const arr: string[] = [];
             productsArr.forEach((product: Products) => {
-                console.log({ product });
                 state.products[product.id] = product;
 
                 arr.push(product.id);
@@ -53,6 +51,8 @@ export const appSlice = createSlice({
             }
 
             state.cart.totalPrice += state.products[productId].price;
+
+            console.log(state);
         },
         removeFromCart: (state, { payload }) => {
             const productId = payload as string;
