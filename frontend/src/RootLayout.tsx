@@ -24,6 +24,7 @@ export const RootLayout: FC<RootLayoutProps> = ({ children }) => {
 
         if (data?.success) {
             dispatch(setAuth({ token: data.token, email }));
+            setAuthToken(data.token);
         }
     };
 
