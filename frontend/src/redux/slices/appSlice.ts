@@ -63,6 +63,7 @@ export const appSlice = createSlice({
                     (id) => id !== productId
                 );
                 state.cart.totalPrice -= state.products[productId].price;
+                state.cart.itemsQuantity[productId] = 0;
             } else {
                 state.cart.itemsQuantity[productId] -= 1;
             }

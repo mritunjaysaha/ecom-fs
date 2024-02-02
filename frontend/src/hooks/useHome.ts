@@ -45,20 +45,34 @@ export const useHome = () => {
 
         if (addToCartBtn && productId) {
             dispatch(addToCart(productId));
+
+            const { data } = await axiosInstance.post(
+                `${import.meta.env.VITE_BASE_URL}/orders/${email}/add-to-cart`,
+                {
+                    id: newOrderId,
+                    productIds: [productId],
+                }
+            );
+
+            if (!data.success) {
+                console.error("failed to update order", data?.message);
+            }
         } else if (removeFromCartBtn && productId) {
             dispatch(removeFromCart(productId));
-        }
 
-        const { data } = await axiosInstance.post(
-            `${import.meta.env.VITE_BASE_URL}/orders/${email}/add-to-cart`,
-            {
-                id: newOrderId,
-                productIds: [productId],
+            const { data } = await axiosInstance.post(
+                `${
+                    import.meta.env.VITE_BASE_URL
+                }/orders/${email}/remove-from-cart`,
+                {
+                    id: newOrderId,
+                    productId: productId,
+                }
+            );
+
+            if (!data.success) {
+                console.error("failed to update order", data?.message);
             }
-        );
-
-        if (!data.success) {
-            console.error("failed to update order", data?.message);
         }
     };
 
