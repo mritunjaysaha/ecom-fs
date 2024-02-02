@@ -2,7 +2,7 @@
 
 # Frontend
 
-Stack: React.js, TypeScript, TailwindCSS
+Stack: React.js, TypeScript, TailwindCSS, Redux, Vite
 Demo: [https://ecom-fs-fe.vercel.app/](https://ecom-fs-fe.vercel.app/)
 
 ### add .env variable file
